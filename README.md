@@ -1,4 +1,4 @@
 hairy-avenger
 =============
 
-King Of Programmer contest at Apps GD China.
+"King Of Programmer" contest at Apps GD China.
