@@ -13,4 +13,4 @@ for x in range( 1,int_N ):
     if (x==1) | ( x==(int_N-1) ):
         print( (int_N-1) * str( x%10 ) )
     else:
-        print(str(x) + ((int_N-3)*" ") + str(x) )
+        print( str(x) + ((x-2)*" ") + str(x) + str(x) + ((x-2)*" ") + str(x) )
