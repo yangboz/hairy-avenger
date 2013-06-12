@@ -12,18 +12,18 @@ int_N = int( N )+1
 # space gap definition
 space_gap_01 = " "
 space_gap_02 = " "
-# 
+#Output 
 for x in range( 1,int_N ):
-    if (x==1) | ( x==(int_N-1) ):
+    if (x==1) | (x==(int_N-1)):
         print( (int_N-1) * str( x%10 ) )
     else:
-        if x>=(int_N/2):
-            space_gap_01 = ((10-x%10)-1)*" "
+        if x>int_N/2:
+            space_gap_01 = (int_N-x-2)*" "
         else:
             space_gap_01 = (x-2)*" "
-        space_gap_02 = (int_N-5- len(space_gap_01)*2 )*" "
-        if x==int_N/2:
-            space_gap_01 += " "
+        #Print
+        if (int_N-1)%2 & (x==int_N/2):
             print( str(x%10) + space_gap_01 + str(x%10) + space_gap_01 + str(x%10))
         else:
+            space_gap_02 = (int_N-5-2*len(space_gap_01))*" "
             print( str(x%10) + space_gap_01 + str(x%10) + space_gap_02 + str(x%10) + space_gap_01 + str(x%10) )
