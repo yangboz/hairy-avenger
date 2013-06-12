@@ -27,3 +27,5 @@ for x in range( 1,int_N ):
         else:
             space_gap_02 = (int_N-5-2*len(space_gap_01))*" "
             print( str(x%10) + space_gap_01 + str(x%10) + space_gap_02 + str(x%10) + space_gap_01 + str(x%10) )
+#Pause the command window
+raw_input("Press any key to exit.")            
