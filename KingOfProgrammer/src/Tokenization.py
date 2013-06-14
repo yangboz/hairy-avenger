@@ -11,7 +11,8 @@
 import sys
 print("sys encoding:",sys.stdout.encoding)
 #Load file for testing
-FILE_NAME = "assets/Test2TestData.txt"
+#FILE_NAME = "assets/Test2TestData.txt"
+FILE_NAME = "assets/Test2TestData_simple.txt"
 #print(open(FILE_NAME).read())
 open_read_file = open(FILE_NAME).read()
 #Load user dictionary file
@@ -27,7 +28,25 @@ jieba.load_userdict("assets/userdict.txt")
 #    
 import jieba.posseg as pseg
 def cut_and_print(text):
-    words =pseg.cut(text)
-    print ", ".join(["%s[%s]" % (word.word, word.flag) for word in words]).encode("utf-8")
-#
+    text_filter_url = filter_url(text)
+    print "text_filter_url:\n"+text_filter_url
+    words =pseg.cut(text_filter_url)
+    raw_print_result = ", ".join(["%s[%s]" % (word.word, word.flag) for word in words]).encode("utf-8")
+    print "raw_print_result:\n"+raw_print_result
+#Sort of filters using Python regexp
+import re
+def filter_url(text):
+    text = re.sub(r'\w+:\/{2}[\d\w-]+(\.[\d\w-]+)*(?:(?:\/[^\s/]*))*', '', text)
+#    text = re.sub(r'^https?:\/\/.*[\r\n]*', '', text, flags=re.MULTILINE)
+    return text
+#network emoticonal symbol [xxx]
+def filter_network_emoticonal_symbol(text):
+    return text
+#name list after the character "@"
+def filter_name_list(text):
+    return text
+# interpunction ,:?!
+def filter_interpunction(text):
+    return text
+#Entry call
 cut_and_print(open_read_file)
