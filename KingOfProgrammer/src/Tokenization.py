@@ -28,11 +28,16 @@ jieba.load_userdict("assets/userdict.txt")
 #    
 import jieba.posseg as pseg
 def cut_and_print(text):
-    text_filter_url = filter_url(text)
-    print "text_filter_url:\n"+text_filter_url
-    words =pseg.cut(text_filter_url)
-    raw_print_result = ", ".join(["%s[%s]" % (word.word, word.flag) for word in words]).encode("utf-8")
-    print "raw_print_result:\n"+raw_print_result
+    text_filtered = filter_url(text)
+    text_filtered = filter_network_emoticonal_symbol(text_filtered)
+    text_filtered = filter_name_list(text_filtered)
+    text_filtered = filter_interpunction(text_filtered)
+    print "text_filtered:\n"+text_filtered
+    words =pseg.cut(text_filtered)
+    pseg_cut_result = ", ".join(["%s[%s]" % (word.word, word.flag) for word in words]).encode("utf-8")
+    print "pseg_cut_result:\n"+pseg_cut_result
+    print "\n final output:\n"
+    nice_output(pseg_cut_result)
 #Sort of filters using Python regexp
 import re
 def filter_url(text):
@@ -41,6 +46,7 @@ def filter_url(text):
     return text
 #network emoticonal symbol [xxx]
 def filter_network_emoticonal_symbol(text):
+    text = re.sub(r'\[.*?\]', '', text)
     return text
 #name list after the character "@"
 def filter_name_list(text):
@@ -48,5 +54,10 @@ def filter_name_list(text):
 # interpunction ,:?!
 def filter_interpunction(text):
     return text
+# Nice output
+def nice_output(text):
+    print "原文id               词汇                     词性                    "
+    print "---------------------------------------"
+    print text
 #Entry call
 cut_and_print(open_read_file)
