@@ -50,6 +50,7 @@ def filter_network_emoticonal_symbol(text):
     return text
 #name list after the character "@"
 def filter_name_list(text):
+    text = re.sub(r'@.*?[ \n]', '', text)
     return text
 # interpunction ,:?!
 def filter_interpunction(text):
