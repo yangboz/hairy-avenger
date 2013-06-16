@@ -28,10 +28,11 @@ jieba.load_userdict("assets/userdict.txt")
 #    
 import jieba.posseg as pseg
 def cut_and_print(text):
+    print "text_before filtered:\n"+text
     text_filtered = filter_url(text)
     text_filtered = filter_network_emoticonal_symbol(text_filtered)
     text_filtered = filter_name_list(text_filtered)
-    text_filtered = filter_interpunction(text_filtered)
+#    text_filtered = filter_interpunction(text_filtered)
     print "text_filtered:\n"+text_filtered
     words =pseg.cut(text_filtered)
     pseg_cut_result = ", ".join(["%s[%s]" % (word.word, word.flag) for word in words]).encode("utf-8")
@@ -52,13 +53,27 @@ def filter_network_emoticonal_symbol(text):
 def filter_name_list(text):
     text = re.sub(r'@.*?[ \n]', '', text)
     return text
-# interpunction ,:?!
+# punctuation ,:?!
+#@see: http://stackoverflow.com/questions/265960/best-way-to-strip-punctuation-from-a-string-in-python
+import string
+table = string.maketrans("", "")
+exclude = set(string.punctuation)
+from unicodedata import category
 def filter_interpunction(text):
     return text
+    return re.sub(r'[,.!~！]+', '', text)
+    return ''.join(ch for ch in text if category(ch)[0] != 'P')
+    return re.sub('[%s]' % re.escape(string.punctuation), '', text)
+    return ''.join(ch for ch in text if ch not in exclude)
+    return text.translate(table,string.punctuation)
 # Nice output
 def nice_output(text):
     print "原文id               词汇                     词性                    "
     print "---------------------------------------"
     print text
+    #Write to file
+    output_file = open('Tokenization_output.txt','r+')
+    output_file.write(text)
+    output_file.close()
 #Entry call
 cut_and_print(open_read_file)
