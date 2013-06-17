@@ -22,9 +22,9 @@ open_read_file = open(FILE_NAME).read()
 import jieba
 jieba.load_userdict("assets/userdict.txt")
 #ICTCLAS dictionary
-ICTCLAS_DICT = {'Ag':u'形语素','a':u'形容词','ad':u'副形词','an':u'名形词','b':u'区别词'}
-#                ,'c':'连词','Dg':'副语素','d':'副词','e':'叹词','f':'方位词','g':'语素','h':'前接成分','i':'成语','j':'略语 ','k':'后接成分','l':'习用语','m':'数词','Ng':'名语素','n':'名词','nr':'人名','ns':'地名','nt':'机构团体','nz':'其他专名','o':'拟声词 ','p':'介词 ','q':'量词 ','r':'代词 ','s':'处所词','Tg':'时语素','t':'时间词','u':'助词 ','Vg':'动语素','v':'动词 ','vd':'副动词 ','vn':'名动词','w':'标点符号','x':'非语素字','y':'语气词','z':'状态词'}
+ICTCLAS_DICT = {'':'','uj':'助略词','ul':'助词习语','Ag':'形语素','a':'形容词','ad':'副形词','an':'名形词','b':'区别词','c':'连词','Dg':'副语素','d':'副词','e':'叹词','f':'方位词','g':'语素','h':'前接成分','i':'成语','j':'略语 ','k':'后接成分','l':'习用语','m':'数词','Ng':'名语素','n':'名词','nr':'人名','ns':'地名','nt':'机构团体','nz':'其他专名','o':'拟声词 ','p':'介词 ','q':'量词 ','r':'代词 ','s':'处所词','Tg':'时语素','t':'时间词','u':'助词 ','Vg':'动语素','v':'动词 ','vd':'副动词 ','vn':'名动词','w':'标点符号','x':'非语素字','y':'语气词','z':'状态词'}
 #Testing
+#print ICTCLAS_DICT['c']
 #seg_list = jieba.cut("坑爹麻烦给力不行", cut_all=False)
 #print "Default Mode:", "/ ".join(seg_list)
 #import jieba.posseg as pseg
@@ -41,9 +41,9 @@ def cut_and_print(text):
 #    text_filtered = filter_interpunction(text_filtered)
     print "text_filtered:\n"+text_filtered
     words =pseg.cut(text_filtered)
-    pseg_cut_result = ", ".join(["%s[%s]" % (word.word, word.flag) for word in words]).encode("utf-8")
+    pseg_cut_result = ", ".join(["%s[%s]" % (word.word, ICTCLAS_DICT[word.flag]) for word in words]).encode("utf-8")
     print "pseg_cut_result:\n"+pseg_cut_result
-    print "\n final output:\n"
+    print "final output:"
     nice_output(pseg_cut_result)
 #Sort of filters using Python regexp
 import re
@@ -74,14 +74,18 @@ def filter_interpunction(text):
 # Nice output
 def nice_output(text):
     #String split []
-#    text = text.split('[]')
     text = filter_interpunction(text)
     print "原文id               词汇                     词性                    "
     print "---------------------------------------"
-    print text
     #Write to file
     output_file = open('Tokenization_output.txt','r+')
     output_file.write(text)
     output_file.close()
+    #
+    texts = text.split('[]')
+    for text in texts:
+        elements  = text.split(',')
+        for element in elements:
+            print element
 #Entry call
 cut_and_print(open_read_file)
