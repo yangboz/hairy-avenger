@@ -17,7 +17,8 @@ print("sys encoding:",sys.stdout.encoding)
 #FILE_NAME = "assets/Test2TestData.txt"
 FILE_NAME = "assets/Test2TestData_simple.txt"
 #print(open(FILE_NAME).read())
-open_read_file = open(FILE_NAME).read()
+#open_read_file = open(FILE_NAME).read()
+open_read_files = open(FILE_NAME).readlines()
 #Load user dictionary file
 import jieba
 jieba.load_userdict("assets/userdict.txt")
@@ -34,15 +35,16 @@ ICTCLAS_DICT = {'':'','uj':'助略词','ul':'助词习语','Ag':'形语素','a':
 #    
 import jieba.posseg as pseg
 def cut_and_print(text):
-    print "text_before filtered:\n"+text
+    print "text_before filtered:"+text
     text_filtered = filter_url(text)
     text_filtered = filter_network_emoticonal_symbol(text_filtered)
     text_filtered = filter_name_list(text_filtered)
 #    text_filtered = filter_interpunction(text_filtered)
-    print "text_filtered:\n"+text_filtered
+    print "text_filtered:"+text_filtered
     words =pseg.cut(text_filtered)
-    pseg_cut_result = ", ".join(["%s[%s]" % (word.word, ICTCLAS_DICT[word.flag]) for word in words]).encode("utf-8")
-    print "pseg_cut_result:\n"+pseg_cut_result
+    pseg_cut_result = ",".join(["%s[%s]" % (word.word, ICTCLAS_DICT[word.flag]) for word in words]).encode("utf-8")
+    pseg_cut_result = pseg_cut_result.strip()
+    print "pseg_cut_result:"+pseg_cut_result
     print "final output:"
     nice_output(pseg_cut_result)
 #Sort of filters using Python regexp
@@ -75,8 +77,6 @@ def filter_interpunction(text):
 def nice_output(text):
     #String split []
     text = filter_interpunction(text)
-    print "原文id               词汇                     词性                    "
-    print "---------------------------------------"
     #Write to file
     output_file = open('Tokenization_output.txt','r+')
     output_file.write(text)
@@ -86,6 +86,9 @@ def nice_output(text):
     for text in texts:
         elements  = text.split(',')
         for element in elements:
-            print element
+            print elements[0]+element
 #Entry call
-cut_and_print(open_read_file)
+print "原文id               词汇                     词性                    "
+print "---------------------------------------"
+for open_read_file in open_read_files:
+    cut_and_print(open_read_file)
