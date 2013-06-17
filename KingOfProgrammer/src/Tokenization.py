@@ -1,4 +1,7 @@
+#encoding=utf-8
 #@see:https://github.com/fxsjy/jieba
+#@see:http://ddtcms.com/blog/archive/2013/2/4/69/jieba-fenci-suanfa-lijie/
+#@see:ICTCLAS http://hi.baidu.com/streamlinlin/item/1978d2ead3d08f3987d9de15
 #encoding=utf-8
 #1.       输入文本文件格式见附件，评委会使用相同格式、不同数据进行评判。
 #2.       输出文本文件格式以范例为准。
@@ -18,6 +21,9 @@ open_read_file = open(FILE_NAME).read()
 #Load user dictionary file
 import jieba
 jieba.load_userdict("assets/userdict.txt")
+#ICTCLAS dictionary
+ICTCLAS_DICT = {'Ag':u'形语素','a':u'形容词','ad':u'副形词','an':u'名形词','b':u'区别词'}
+#                ,'c':'连词','Dg':'副语素','d':'副词','e':'叹词','f':'方位词','g':'语素','h':'前接成分','i':'成语','j':'略语 ','k':'后接成分','l':'习用语','m':'数词','Ng':'名语素','n':'名词','nr':'人名','ns':'地名','nt':'机构团体','nz':'其他专名','o':'拟声词 ','p':'介词 ','q':'量词 ','r':'代词 ','s':'处所词','Tg':'时语素','t':'时间词','u':'助词 ','Vg':'动语素','v':'动词 ','vd':'副动词 ','vn':'名动词','w':'标点符号','x':'非语素字','y':'语气词','z':'状态词'}
 #Testing
 #seg_list = jieba.cut("坑爹麻烦给力不行", cut_all=False)
 #print "Default Mode:", "/ ".join(seg_list)
@@ -58,16 +64,18 @@ def filter_name_list(text):
 import string
 table = string.maketrans("", "")
 exclude = set(string.punctuation)
-from unicodedata import category
+#from unicodedata import category
 def filter_interpunction(text):
-    return text
     return re.sub(r'[,.!~！]+', '', text)
-    return ''.join(ch for ch in text if category(ch)[0] != 'P')
-    return re.sub('[%s]' % re.escape(string.punctuation), '', text)
-    return ''.join(ch for ch in text if ch not in exclude)
-    return text.translate(table,string.punctuation)
+#    return ''.join(ch for ch in text if category(ch)[0] != 'P')
+#    return re.sub('[%s]' % re.escape(string.punctuation), '', text)
+#    return ''.join(ch for ch in text if ch not in exclude)
+#    return text.translate(table,string.punctuation)
 # Nice output
 def nice_output(text):
+    #String split []
+#    text = text.split('[]')
+    text = filter_interpunction(text)
     print "原文id               词汇                     词性                    "
     print "---------------------------------------"
     print text
