@@ -1,4 +1,6 @@
 #encoding=utf-8
+#Pause the command window
+raw_input("Press any key to continue.") 
 #@see:https://github.com/fxsjy/jieba
 #@see:http://ddtcms.com/blog/archive/2013/2/4/69/jieba-fenci-suanfa-lijie/
 #@see:ICTCLAS http://hi.baidu.com/streamlinlin/item/1978d2ead3d08f3987d9de15
@@ -14,16 +16,18 @@
 import sys
 print("sys encoding:",sys.stdout.encoding)
 #Load file for testing
-#FILE_NAME = "assets/Test2TestData.txt"
-FILE_NAME = "assets/Test2TestData_simple.txt"
+FILE_NAME = "Test2TestData.txt"
+#FILE_NAME = "assets/Test2TestData_simple.txt"
 #print(open(FILE_NAME).read())
 #open_read_file = open(FILE_NAME).read()
 open_read_files = open(FILE_NAME).readlines()
 #Load user dictionary file
 import jieba
-jieba.load_userdict("assets/userdict.txt")
+jieba.load_userdict("userdict.txt")
 #ICTCLAS dictionary
-ICTCLAS_DICT = {'':'','uj':'助略词','ul':'助词习语','Ag':'形语素','a':'形容词','ad':'副形词','an':'名形词','b':'区别词','c':'连词','Dg':'副语素','d':'副词','e':'叹词','f':'方位词','g':'语素','h':'前接成分','i':'成语','j':'略语 ','k':'后接成分','l':'习用语','m':'数词','Ng':'名语素','n':'名词','nr':'人名','ns':'地名','nt':'机构团体','nz':'其他专名','o':'拟声词 ','p':'介词 ','q':'量词 ','r':'代词 ','s':'处所词','Tg':'时语素','t':'时间词','u':'助词 ','Vg':'动语素','v':'动词 ','vd':'副动词 ','vn':'名动词','w':'标点符号','x':'非语素字','y':'语气词','z':'状态词'}
+ICTCLAS_DICT = {'':'','uj':'助略词','ul':'助词习语','Ag':'形语素','a':'形容词','ad':'副形词','ag':'形容词量词','an':'名形词','b':'区别词','c':'连词','Dg':'副语素','d':'副词','df':'副词方位词','e':'叹词','eng':'English','f':'方位词','g':'语素','h':'前接成分','i':'成语','j':'略语 ','k':'后接成分','l':'习用语','m':'数词','mq':'数量词','Ng':'名语素','n':'名词','ng':'名词语素','nr':'人名','ns':'地名','nt':'机构团体','nrt':'人名机构团体','nz':'其他专名','o':'拟声词 ','p':'介词 ','q':'量词 ','r':'代词 ','s':'处所词','Tg':'时语素','t':'时间词','tg':'时间量词','uz':'助状态词 ','u':'助词 ','ud':'助副词 ','ug':'助词语素 ','Vg':'动语素','v':'动词 ','vd':'副动词 ','vg':'动词语素 ','vn':'名动词','vq':'动量词','w':'标点符号','x':'非语素字','y':'语气词','z':'状态词','zg':'状态词语素'}
+#Final results
+final_results = []
 #Testing
 #print ICTCLAS_DICT['c']
 #seg_list = jieba.cut("坑爹麻烦给力不行", cut_all=False)
@@ -35,17 +39,18 @@ ICTCLAS_DICT = {'':'','uj':'助略词','ul':'助词习语','Ag':'形语素','a':
 #    
 import jieba.posseg as pseg
 def cut_and_print(text):
-    print "text_before filtered:"+text
+#    print "text_before filtered:"+text
     text_filtered = filter_url(text)
     text_filtered = filter_network_emoticonal_symbol(text_filtered)
     text_filtered = filter_name_list(text_filtered)
 #    text_filtered = filter_interpunction(text_filtered)
-    print "text_filtered:"+text_filtered
+#    print "text_filtered:"+text_filtered
     words =pseg.cut(text_filtered)
     pseg_cut_result = ",".join(["%s[%s]" % (word.word, ICTCLAS_DICT[word.flag]) for word in words]).encode("utf-8")
     pseg_cut_result = pseg_cut_result.strip()
-    print "pseg_cut_result:"+pseg_cut_result
-    print "final output:"
+    pseg_cut_result = re.sub(r'\[x\]', '', pseg_cut_result)
+#    print "pseg_cut_result:"+pseg_cut_result
+#    print "final output:"
     nice_output(pseg_cut_result)
 #Sort of filters using Python regexp
 import re
@@ -77,18 +82,31 @@ def filter_interpunction(text):
 def nice_output(text):
     #String split []
     text = filter_interpunction(text)
+#    print "raw result:"+text
     #Write to file
     output_file = open('Tokenization_output.txt','r+')
     output_file.write(text)
     output_file.close()
     #
     texts = text.split('[]')
-    for text in texts:
-        elements  = text.split(',')
-        for element in elements:
-            print elements[0]+element
+    textsIndex = str(texts[0]).split('[')[0]
+    texts.remove(texts[0])#remove the first item
+#    print "textsIndex:"+textsIndex+" texts:"+str(texts)
+    elements = []
+    if len(texts)>=2:#Remove null value item
+        for text in texts:
+            elements  = text.split(']')
+    #        print len(elements)
+            for element in elements:
+                element = re.sub(r'\[', '                         ', element)#replace string
+                print textsIndex+"            "+element#nice out put
+    #            final_results.append(element)
+    #    print final_results        
+            
 #Entry call
-print "原文id               词汇                     词性                    "
-print "---------------------------------------"
+print "原文id            词汇                               词性                    "
+print "------------------------------------------"
 for open_read_file in open_read_files:
     cut_and_print(open_read_file)
+#Pause the command window
+raw_input("Press any key to exit.") 
