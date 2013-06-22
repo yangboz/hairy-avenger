@@ -1,6 +1,6 @@
 #encoding=utf-8
 #Pause the command window
-raw_input("Press any key to continue.") 
+raw_input("Press any key to start.") 
 #@see:https://github.com/fxsjy/jieba
 #@see:http://ddtcms.com/blog/archive/2013/2/4/69/jieba-fenci-suanfa-lijie/
 #@see:ICTCLAS http://hi.baidu.com/streamlinlin/item/1978d2ead3d08f3987d9de15
@@ -15,6 +15,11 @@ raw_input("Press any key to continue.")
 #encoding=utf-8
 import sys
 print("sys encoding:",sys.stdout.encoding)
+import os
+def include(filename):
+    if os.path.exists(filename): 
+        execfile(filename)
+include('prob_start.py')
 #Load file for testing
 FILE_NAME = "Test2TestData.txt"
 #FILE_NAME = "assets/Test2TestData_simple.txt"
