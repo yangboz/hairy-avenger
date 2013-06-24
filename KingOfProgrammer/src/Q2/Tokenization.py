@@ -84,16 +84,16 @@ def filter_interpunction(text):
 def nice_output(text):
     #String split []
     text = filter_interpunction(text)
-    print "raw result:"+text
+#    print "raw result:"+text
     #Write to file
     output_file = open('Tokenization_output.txt','r+')
     output_file.write(text)
     output_file.close()
     #
-    texts = text.split('[]')
+    texts = text.split(' ')
     textsIndex = str(texts[0]).split('[')[0]
     texts.remove(texts[0])#remove the first item
-    print "textsIndex:"+textsIndex+" texts:"+str(texts)
+#    print "textsIndex:"+textsIndex+" texts:"+str(texts)
     elements = []
     if len(texts)>=2:#Remove null value item
         for text in texts:
@@ -106,9 +106,10 @@ def nice_output(text):
     #    print final_results        
             
 #Entry call
-print "原文id            词汇                               词性                    "
+print "原文id            词汇                                    词性                    "
 print "------------------------------------------"
 for open_read_file in open_read_files:
-    cut_and_print(open_read_file)
+#    cut_and_print(open_read_file)
+    cut_and_print(unicode(open_read_file,sys.getdefaultencoding()))
 #Pause the command window
 raw_input("Press any key to exit.") 
