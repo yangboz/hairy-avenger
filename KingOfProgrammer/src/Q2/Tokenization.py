@@ -20,14 +20,16 @@ FILE_NAME = "Test2TestData.txt"
 #FILE_NAME = "assets/Test2TestData_simple.txt"
 #print(open(FILE_NAME).read())
 #open_read_file = open(FILE_NAME).read()
-open_read_files = open(FILE_NAME).readlines()
+import codecs
+open_read_files = codecs.open(FILE_NAME,"r","utf-8").readlines()
+#open_read_files = open(FILE_NAME).readlines()
 #Load user dictionary file
 import jieba
 jieba.set_dictionary("./dict.txt")
 jieba.initialize()
 jieba.load_userdict("userdict.txt")
 #ICTCLAS dictionary
-ICTCLAS_DICT = {'':'','uj':'助略词','ul':'助词习语','Ag':'形语素','a':'形容词','ad':'副形词','ag':'形容词量词','an':'名形词','b':'区别词','c':'连词','Dg':'副语素','d':'副词','df':'副词方位词','e':'叹词','eng':'English','f':'方位词','g':'语素','h':'前接成分','i':'成语','j':'略语 ','k':'后接成分','l':'习用语','m':'数词','mq':'数量词','Ng':'名语素','n':'名词','ng':'名词语素','nr':'人名','ns':'地名','nt':'机构团体','nrt':'人名机构团体','nz':'其他专名','o':'拟声词 ','p':'介词 ','q':'量词 ','r':'代词 ','s':'处所词','Tg':'时语素','t':'时间词','tg':'时间量词','uz':'助状态词 ','u':'助词 ','ud':'助副词 ','ug':'助词语素 ','Vg':'动语素','v':'动词 ','vd':'副动词 ','vg':'动词语素 ','vn':'名动词','vq':'动量词','w':'标点符号','x':'非语素字','y':'语气词','z':'状态词','zg':'状态词语素'}
+ICTCLAS_DICT={'':u'','uj':u'助略词','ul':u'助词习语','Ag':u'形语素','a':u'形容词','ad':u'副形词','ag':u'形容词量词','an':u'名形词','b':u'区别词','c':u'连词','Dg':u'副语素','d':u'副词','df':u'副词方位词','e':u'叹词','eng':u'English','f':u'方位词','g':u'语素','h':u'前接成分','i':u'成语','j':u'略语 ','k':u'后接成分','l':u'习用语','m':u'数词','mq':u'数量词','Ng':u'名语素','n':u'名词','ng':u'名词语素','nr':u'人名','ns':u'地名','nt':u'机构团体','nrt':u'人名机构团体','nz':u'其他专名','o':u'拟声词 ','p':u'介词 ','q':u'量词 ','r':u'代词 ','s':u'处所词','Tg':u'时语素','t':u'时间词','tg':u'时间量词','uz':u'助状态词 ','u':u'助词 ','ud':u'助副词 ','ug':u'助词语素 ','Vg':u'动语素','v':u'动词 ','vd':u'副动词 ','vg':u'动词语素 ','vn':u'名动词','vq':u'动量词','w':u'标点符号','x':u'非语素字','y':u'语气词','z':u'状态词','zg':u'状态词语素'}
 #Final results
 final_results = []
 #Testing
@@ -48,7 +50,9 @@ def cut_and_print(text):
 #    text_filtered = filter_interpunction(text_filtered)
 #    print "text_filtered:"+text_filtered
     words =pseg.cut(text_filtered)
-    pseg_cut_result = ",".join(["%s[%s]" % (word.word, ICTCLAS_DICT[word.flag]) for word in words]).encode("utf-8")
+    pseg_cut_result = u",".join(["%s[%s]" % (word.word, ICTCLAS_DICT[word.flag]) for word in words])
+    #pseg_cut_result = u",".join([u"%s[%s]" % (word.word, word.flag) for word in words])
+    #pseg_cut_result = " ".join([word.word + ICTCLAS_DICT[word.flag] for word in words])
     pseg_cut_result = pseg_cut_result.strip()
     pseg_cut_result = re.sub(r'\[x\]', '', pseg_cut_result)
 #    print "pseg_cut_result:"+pseg_cut_result
@@ -86,12 +90,13 @@ def nice_output(text):
     text = filter_interpunction(text)
 #    print "raw result:"+text
     #Write to file
-    output_file = open('Tokenization_output.txt','r+')
-    output_file.write(text)
+#    output_file.write(text.encode('utf-8'))
+    output_file = open('Tokenization_output.txt','a')
+    output_file.write(text.encode('utf-8'))
     output_file.close()
     #
     texts = text.split(' ')
-    textsIndex = str(texts[0]).split('[')[0]
+    textsIndex = texts[0].split('[')[0]
     texts.remove(texts[0])#remove the first item
 #    print "textsIndex:"+textsIndex+" texts:"+str(texts)
     elements = []
@@ -101,15 +106,17 @@ def nice_output(text):
     #        print len(elements)
             for element in elements:
                 element = re.sub(r'\[', '                         ', element)#replace string
-                print textsIndex+"            "+element#nice out put
+#                print textsIndex+"            "+element#nice out put
+                print textsIndex+"            "+element #nice out put
     #            final_results.append(element)
     #    print final_results        
             
 #Entry call
 print "原文id            词汇                                    词性                    "
+#print "ID            SENTENCE         TAGGING    "
 print "------------------------------------------"
 for open_read_file in open_read_files:
-#    cut_and_print(open_read_file)
-    cut_and_print(unicode(open_read_file,sys.getdefaultencoding()))
+    cut_and_print(open_read_file)
+#    cut_and_print(unicode(open_read_file,sys.getdefaultencoding()))
 #Pause the command window
 raw_input("Press any key to exit.") 
